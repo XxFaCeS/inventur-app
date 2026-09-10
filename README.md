@@ -68,7 +68,8 @@ Das Skript baut zuerst das Frontend (`client/dist`) und startet dann den Express
 
 - `PORT` (optional): Port für den Express-Server (Default: `3001`)
 - `DB_PATH` (optional): Pfad zur SQLite-Datei. Absolut oder relativ zu `/server` (Default: `data/inventur.db`)
-- `CORS_ORIGINS` (optional): Komma-separierte Origins für CORS (Default: `http://localhost:5173`)
+- `CORS_ORIGINS` (optional): Komma-separierte Origins für CORS (zusätzlich zu localhost-Origins, z. B. `https://inventur.example.com`)
+- `PRODUCTION_URL` (optional): Produktive Frontend-URL als zusätzliche erlaubte CORS-Origin
 - `NODE_ENV` (optional): Für Produktion `production` setzen
 
 Beispiel:
