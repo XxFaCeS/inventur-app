@@ -19,7 +19,7 @@ COPY --from=build /app/client/package*.json ./client/
 COPY --from=build /app/server ./server
 COPY --from=build /app/client/dist ./client/dist
 RUN rm -rf ./node_modules ./server/node_modules \
-  && npm ci --omit=dev --workspace server \
+  && npm ci --omit=dev \
   && npm cache clean --force
 EXPOSE 3001
 CMD ["npm", "run", "start", "--workspace", "server"]

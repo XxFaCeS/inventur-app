@@ -182,6 +182,7 @@ Vercel eignet sich primär für das React-Frontend:
 3. In Vercel eine Rewrite-Regel setzen, damit `/api/*` an dein Backend geht (Project Settings → Rewrites):
    - Source: `/api/(.*)`
    - Destination: `https://<dein-backend>/api/$1`
+   - Diese Regel nur für API-Requests nutzen; Frontend-Routen bleiben weiterhin im React-Client.
 4. `CORS_ORIGINS` am Backend auf Vercel-Domain setzen.
 
 ---
