@@ -131,10 +131,10 @@ Schritte:
 2. Environment Variables setzen:
    - `NODE_ENV=production`
    - `CORS_ORIGINS=https://<deine-domain>`
-   - `DB_PATH=/app/data/inventur.db` (mit persistentem Storage/Add-on empfohlen)
+   - optional `DB_PATH=/app/data/inventur.db` (nur für Tests, Daten sind auf Heroku nicht persistent)
 3. Deploy via GitHub Integration oder Heroku CLI.
 
-> Hinweis: SQLite auf Heroku ist ohne persistentes Volume nicht dauerhaft. Für produktive Nutzung besser Render/Railway mit Volume oder externe DB.
+> Hinweis: Heroku-Dateisystem ist ephemer. Für produktive Nutzung auf Heroku statt SQLite eine externe, persistente Datenbank nutzen.
 
 ---
 
@@ -162,13 +162,14 @@ Empfohlene Variablen:
 
 - `NODE_ENV=production`
 - `CORS_ORIGINS=https://<deine-railway-domain>`
-- `DB_PATH=/data/inventur.db` (nur sinnvoll mit persistentem Volume)
+- `DB_PATH=/data/inventur.db` (nur mit explizit eingerichteter persistent storage Lösung)
 
 Deploy:
 
 1. Repo in Railway verbinden
 2. Variablen setzen
-3. Deployment starten
+3. Für produktive SQLite-Nutzung zuerst persistente Storage-Lösung einrichten (sonst Datenverlust bei Redeploy möglich)
+4. Deployment starten
 
 ---
 
