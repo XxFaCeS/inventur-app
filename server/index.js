@@ -29,7 +29,6 @@ const corsOptions = {
     }
     callback(new Error('Origin nicht erlaubt.'));
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
 };
 
