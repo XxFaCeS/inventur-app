@@ -7,21 +7,33 @@ const path = require('node:path');
 
 const PORT = Number(process.env.PORT) || 3001;
 const app = express();
-const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173')
+const localhostOriginPattern = /^https?:\/\/(localhost|127\.0\.0\.1):\d+$/;
+const configuredOrigins = (process.env.CORS_ORIGINS || '')
   .split(',')
   .map((origin) => origin.trim())
   .filter(Boolean);
 
+const productionOrigin = process.env.PRODUCTION_URL?.trim();
+const allowedOrigins = new Set([
+  'http://localhost:3000',
+  'http://localhost:5173',
+  ...configuredOrigins,
+  ...(productionOrigin ? [productionOrigin] : []),
+]);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.has(origin) || localhostOriginPattern.test(origin)) {
+      callback(null, true);
+      return;
+    }
+    callback(new Error('Origin nicht erlaubt.'));
+  },
+  credentials: true,
+};
+
 app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-        return;
-      }
-      callback(new Error('Origin nicht erlaubt.'));
-    },
-  }),
+  cors(corsOptions),
 );
 app.use(express.json());
 app.use(
