@@ -1,0 +1,20 @@
+{
+  "name": "inventur-app-server",
+  "version": "1.0.0",
+  "description": "Express + SQLite API für Inventur-App",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch index.js",
+    "start": "node index.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "better-sqlite3": "^12.11.1",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}

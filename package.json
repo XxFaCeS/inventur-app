@@ -1,0 +1,27 @@
+{
+  "name": "inventur-app",
+  "version": "1.0.0",
+  "description": "Inventur- und Bestandsverwaltungs-Webanwendung (Node.js/Express, SQLite, React)",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace server\" \"npm run dev --workspace client\"",
+    "build": "npm run build --workspace client",
+    "start": "npm run build && npm run start --workspace server",
+    "setup": "npm install --workspace server && npm install --workspace client"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://localhost:26831/XxFaCeS/inventur-app"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.2.4"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
