@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: inventur-app
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run start --workspace server
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CORS_ORIGINS
+        sync: false
+      - key: DB_PATH
+        value: /var/data/inventur.db
+    disk:
+      name: inventur-data
+      mountPath: /var/data
+      sizeGB: 1

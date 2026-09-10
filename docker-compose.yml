@@ -1,0 +1,17 @@
+services:
+  inventur-app:
+    build: .
+    container_name: inventur-app
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      CORS_ORIGINS: http://localhost:3001,http://localhost:5173
+      DB_PATH: /app/server/data/inventur.db
+    volumes:
+      - inventur-data:/app/server/data
+    restart: unless-stopped
+
+volumes:
+  inventur-data:
