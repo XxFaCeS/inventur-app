@@ -39,6 +39,16 @@ const statusBadge = (item) => (
   </span>
 );
 
+const formatDate = (value) => {
+  if (!value) return '-';
+  const normalized =
+    typeof value === 'string' && value.includes(' ') && !value.includes('T')
+      ? `${value.replace(' ', 'T')}Z`
+      : value;
+  const date = new Date(normalized);
+  return Number.isNaN(date.getTime()) ? String(value) : date.toLocaleString('de-DE');
+};
+
 const Layout = ({ children }) => (
   <div className="app-shell">
     <header className="topbar">
@@ -89,7 +99,7 @@ const OverviewPage = () => {
   }, [query]);
 
   const handleExport = () => {
-    window.location.href = '/api/export/csv';
+    window.location.href = `/api/export/csv${query ? `?${query}` : ''}`;
   };
 
   return (
@@ -488,7 +498,7 @@ const DetailPage = () => {
                 <tbody>
                   {artikel.bewegungen.map((bewegung) => (
                     <tr key={bewegung.id}>
-                      <td>{new Date(bewegung.erstellt_am).toLocaleString('de-DE')}</td>
+                      <td>{formatDate(bewegung.erstellt_am)}</td>
                       <td>{bewegung.typ}</td>
                       <td>{bewegung.menge}</td>
                       <td>{bewegung.kommentar || '-'}</td>
@@ -570,6 +580,19 @@ const App = () => (
     <Route path="/artikel/neu" element={<CreatePage />} />
     <Route path="/artikel/:id" element={<DetailPage />} />
     <Route path="/artikel/:id/bearbeiten" element={<EditPage />} />
+    <Route
+      path="*"
+      element={
+        <Layout>
+          <section className="card">
+            <h2>Seite nicht gefunden</h2>
+            <Link className="button" to="/">
+              Zur Bestandsübersicht
+            </Link>
+          </section>
+        </Layout>
+      }
+    />
   </Routes>
 );
 

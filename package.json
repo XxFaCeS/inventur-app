@@ -3,11 +3,15 @@
   "version": "1.0.0",
   "description": "Inventur- und Bestandsverwaltungs-Webanwendung (Node.js/Express, SQLite, React)",
   "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
   "scripts": {
-    "postinstall": "npm install --prefix server && npm install --prefix client",
-    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
-    "build": "npm run build --prefix client",
-    "start": "npm run build && npm run start --prefix server"
+    "dev": "concurrently \"npm run dev --workspace server\" \"npm run dev --workspace client\"",
+    "build": "npm run build --workspace client",
+    "start": "npm run build && npm run start --workspace server",
+    "setup": "npm install --workspace server && npm install --workspace client"
   },
   "repository": {
     "type": "git",

@@ -22,13 +22,19 @@ Inventur- und Bestandsverwaltungs-Webanwendung für interne Nutzung.
 npm install
 ```
 
-> Das Root-`postinstall` installiert automatisch Dependencies in `/server` und `/client`.
+> Über npm-Workspaces werden Dependencies für Root, `/server` und `/client` zusammen installiert.
 
 ### Variante B: manuell pro Unterordner
 
 ```bash
 cd server && npm install
 cd ../client && npm install
+```
+
+Optional (wenn Workspaces installiert wurden und du gezielt beide Workspaces erneut installieren willst):
+
+```bash
+npm run setup
 ```
 
 ## Entwicklung starten

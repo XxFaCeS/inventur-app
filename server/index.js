@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const Database = require('better-sqlite3');
+const { rateLimit } = require('express-rate-limit');
 const fs = require('node:fs');
 const path = require('node:path');
 
@@ -9,6 +10,16 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(
+  '/api',
+  rateLimit({
+    windowMs: 60 * 1000,
+    limit: 120,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Zu viele Anfragen. Bitte in einer Minute erneut versuchen.' },
+  }),
+);
 
 const dataDir = path.join(__dirname, 'data');
 if (!fs.existsSync(dataDir)) {
@@ -322,7 +333,22 @@ const escapeCsv = (value) => {
 
 app.get('/api/export/csv', (req, res) => {
   try {
-    const artikel = db.prepare('SELECT * FROM artikel ORDER BY name COLLATE NOCASE ASC').all();
+    const { suche = '', kategorie = '', lagerort = '' } = req.query;
+    const artikel = db
+      .prepare(
+        `
+        SELECT * FROM artikel
+        WHERE name LIKE @suche
+          AND (@kategorie = '' OR kategorie = @kategorie)
+          AND (@lagerort = '' OR lagerort = @lagerort)
+        ORDER BY name COLLATE NOCASE ASC
+      `,
+      )
+      .all({
+        suche: `%${String(suche).trim()}%`,
+        kategorie: String(kategorie).trim(),
+        lagerort: String(lagerort).trim(),
+      });
     const header = ['name', 'kategorie', 'lagerort', 'menge', 'einheit', 'mindestbestand', 'status'];
 
     const rows = artikel.map((item) => [
