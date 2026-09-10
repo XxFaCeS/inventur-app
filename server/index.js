@@ -7,8 +7,22 @@ const path = require('node:path');
 
 const PORT = Number(process.env.PORT) || 3001;
 const app = express();
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
-app.use(cors());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(new Error('Origin nicht erlaubt.'));
+    },
+  }),
+);
 app.use(express.json());
 app.use(
   '/api',
@@ -227,6 +241,9 @@ app.post('/api/artikel/:id/bewegung', (req, res) => {
     if (bewegungsMenge < 0) {
       return res.status(400).json({ error: 'Menge darf nicht negativ sein.' });
     }
+    if ((typ === 'zugang' || typ === 'abgang') && bewegungsMenge === 0) {
+      return res.status(400).json({ error: 'Für Zugang/Abgang muss die Menge größer als 0 sein.' });
+    }
 
     const artikel = db.prepare('SELECT * FROM artikel WHERE id = ?').get(artikelId);
     if (!artikel) return notFound(res, 'Artikel');
@@ -381,6 +398,13 @@ if (fs.existsSync(clientDistPath)) {
 
 app.use('/api', (_req, res) => {
   res.status(404).json({ error: 'API-Endpunkt nicht gefunden.' });
+});
+
+app.use((error, _req, res, _next) => {
+  if (error?.message === 'Origin nicht erlaubt.') {
+    return res.status(403).json({ error: 'CORS: Origin nicht erlaubt.' });
+  }
+  return res.status(500).json({ error: 'Unerwarteter Serverfehler.' });
 });
 
 app.listen(PORT, () => {

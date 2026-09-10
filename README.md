@@ -8,6 +8,10 @@ Inventur- und Bestandsverwaltungs-Webanwendung für interne Nutzung.
 - **Datenbank:** SQLite (`/server/data/inventur.db`)
 - **Frontend:** React + Vite (`/client`)
 
+## Voraussetzungen
+
+- **Node.js:** mindestens `20.19.0` (empfohlen: aktuelle `22.x` LTS)
+
 ## Projektstruktur
 
 - `/server` – REST-API unter `/api/...`, SQLite-Schema-Migration beim Start
