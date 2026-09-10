@@ -8,6 +8,7 @@ const path = require('node:path');
 const PORT = Number(process.env.PORT) || 3001;
 const app = express();
 const normalizeOrigin = (origin) => origin.trim().replace(/\/+$/, '');
+const localhostOriginPattern = /^https?:\/\/(localhost|127\.0\.0\.1):\d+$/;
 const configuredOrigins = (process.env.CORS_ORIGINS || '')
   .split(',')
   .map((origin) => normalizeOrigin(origin))
@@ -33,7 +34,7 @@ const corsOptions = {
       return;
     }
 
-    if (allowedOrigins.has(normalizeOrigin(origin))) {
+    if (allowedOrigins.has(normalizeOrigin(origin)) || localhostOriginPattern.test(origin)) {
       callback(null, true);
       return;
     }
