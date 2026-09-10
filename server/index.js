@@ -37,10 +37,11 @@ app.use(
 
 const defaultDbPath = path.join(__dirname, 'data', 'inventur.db');
 const dbPathEnv = process.env.DB_PATH?.trim();
+const serverRoot = path.resolve(__dirname);
 const dbPath = dbPathEnv
   ? path.isAbsolute(dbPathEnv)
     ? dbPathEnv
-    : path.join(__dirname, dbPathEnv)
+    : path.join(serverRoot, dbPathEnv)
   : defaultDbPath;
 
 const dbDirectory = path.dirname(dbPath);
