@@ -7,29 +7,42 @@ const path = require('node:path');
 
 const PORT = Number(process.env.PORT) || 3001;
 const app = express();
+const normalizeOrigin = (origin) => origin.trim().replace(/\/+$/, '');
 const localhostOriginPattern = /^https?:\/\/(localhost|127\.0\.0\.1):\d+$/;
 const configuredOrigins = (process.env.CORS_ORIGINS || '')
   .split(',')
-  .map((origin) => origin.trim())
+  .map((origin) => normalizeOrigin(origin))
   .filter(Boolean);
 
-const productionOrigin = process.env.PRODUCTION_URL?.trim();
+const productionOrigin = process.env.PRODUCTION_URL ? normalizeOrigin(process.env.PRODUCTION_URL) : '';
 const allowedOrigins = new Set([
+  'https://inventur-app-production.up.railway.app',
   'http://localhost:3000',
   'http://localhost:5173',
+  'http://localhost:3001',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:3001',
   ...configuredOrigins,
   ...(productionOrigin ? [productionOrigin] : []),
 ]);
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.has(origin) || localhostOriginPattern.test(origin)) {
+    if (!origin) {
       callback(null, true);
       return;
     }
-    callback(new Error('Origin nicht erlaubt.'));
+
+    if (allowedOrigins.has(normalizeOrigin(origin)) || localhostOriginPattern.test(origin)) {
+      callback(null, true);
+      return;
+    }
+    callback(new Error('Not allowed by CORS'));
   },
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
   credentials: true,
+  optionsSuccessStatus: 200,
 };
 
 app.use(
@@ -420,7 +433,7 @@ app.use('/api', (_req, res) => {
 });
 
 app.use((error, _req, res, _next) => {
-  if (error?.message === 'Origin nicht erlaubt.') {
+  if (error?.message === 'Origin nicht erlaubt.' || error?.message === 'Not allowed by CORS') {
     return res.status(403).json({ error: 'CORS: Origin nicht erlaubt.' });
   }
   return res.status(500).json({ error: 'Unerwarteter Serverfehler.' });
