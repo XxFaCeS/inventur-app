@@ -1,0 +1,9 @@
+.git
+.gitignore
+node_modules
+**/node_modules
+client/dist
+server/data/*.db
+server/data/*.sqlite
+server/data/*.sqlite3
+npm-debug.log*

@@ -35,12 +35,18 @@ app.use(
   }),
 );
 
-const dataDir = path.join(__dirname, 'data');
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
-}
+const defaultDbPath = path.join(__dirname, 'data', 'inventur.db');
+const dbPathEnv = process.env.DB_PATH?.trim();
+const dbPath = dbPathEnv
+  ? path.isAbsolute(dbPathEnv)
+    ? dbPathEnv
+    : path.join(__dirname, dbPathEnv)
+  : defaultDbPath;
 
-const dbPath = path.join(dataDir, 'inventur.db');
+const dbDirectory = path.dirname(dbPath);
+if (!fs.existsSync(dbDirectory)) {
+  fs.mkdirSync(dbDirectory, { recursive: true });
+}
 const db = new Database(dbPath);
 db.pragma('foreign_keys = ON');
 
