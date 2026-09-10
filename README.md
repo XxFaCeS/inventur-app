@@ -178,7 +178,9 @@ Vercel eignet sich primär für das React-Frontend:
 
 1. Frontend (`/client`) auf Vercel deployen.
 2. Backend separat deployen (z. B. Render/Railway/VPS).
-3. Datei `vercel.json` anpassen (Platzhalter-URL durch deine Backend-URL ersetzen), damit `/api/*` weitergeleitet wird.
+3. In Vercel eine Rewrite-Regel setzen, damit `/api/*` an dein Backend geht (Project Settings → Rewrites):
+   - Source: `/api/(.*)`
+   - Destination: `https://<dein-backend>/api/$1`
 4. `CORS_ORIGINS` am Backend auf Vercel-Domain setzen.
 
 ---
@@ -235,7 +237,7 @@ docker run -d --name inventur-app \
   -p 3001:3001 \
   -e NODE_ENV=production \
   -e PORT=3001 \
-  -e CORS_ORIGINS=http://localhost:3001 \
+  -e CORS_ORIGINS=http://localhost:3001,http://localhost:5173 \
   -e DB_PATH=/app/server/data/inventur.db \
   -v inventur-data:/app/server/data \
   inventur-app
