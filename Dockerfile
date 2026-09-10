@@ -16,9 +16,10 @@ ENV NODE_ENV=production
 COPY --from=build /app/package*.json ./
 COPY --from=build /app/server/package*.json ./server/
 COPY --from=build /app/client/package*.json ./client/
-RUN npm ci --omit=dev --workspace server \
-  && npm cache clean --force
-COPY --from=build /app/server/index.js ./server/index.js
+COPY --from=build /app/server ./server
 COPY --from=build /app/client/dist ./client/dist
+RUN rm -rf ./node_modules ./server/node_modules \
+  && npm ci --omit=dev --workspace server \
+  && npm cache clean --force
 EXPOSE 3001
-CMD ["node", "server/index.js"]
+CMD ["npm", "run", "start", "--workspace", "server"]

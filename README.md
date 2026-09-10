@@ -146,7 +146,7 @@ Datei `render.yaml` ist enthalten. Alternativ manuell:
 - **Start Command:** `npm run start --workspace server`
 - **Environment:**
   - `NODE_ENV=production`
-  - `PORT=10000` (Render setzt meist selbst)
+  - `PORT` wird von Render automatisch gesetzt (normalerweise **nicht** manuell setzen)
   - `CORS_ORIGINS=https://<deine-render-url-oder-custom-domain>`
   - `DB_PATH=/var/data/inventur.db` (wenn Disk gemountet)
 
