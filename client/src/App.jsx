@@ -99,7 +99,13 @@ const OverviewPage = () => {
   }, [query]);
 
   const handleExport = () => {
-    window.location.href = `/api/export/csv${query ? `?${query}` : ''}`;
+    const href = `/api/export/csv${query ? `?${query}` : ''}`;
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = 'bestand.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -323,6 +329,7 @@ const EditPage = () => {
       {error && <p className="error">{error}</p>}
       {initialValues && (
         <ArtikelForm
+          key={`${id}-${JSON.stringify(initialValues)}`}
           initialValues={initialValues}
           onSubmit={async (payload) => {
             await apiRequest(`/api/artikel/${id}`, {
