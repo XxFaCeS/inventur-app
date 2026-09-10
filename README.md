@@ -74,7 +74,8 @@ Das Skript baut zuerst das Frontend (`client/dist`) und startet dann den Express
 Beispiel:
 
 ```bash
-PORT=4000 DB_PATH=/var/data/inventur.db CORS_ORIGINS=https://inventur.example.com npm start
+npm run build
+PORT=4000 DB_PATH=/var/data/inventur.db CORS_ORIGINS=https://inventur.example.com npm run start --workspace server
 ```
 
 ## API-Übersicht
@@ -110,7 +111,8 @@ npm run dev
 Für einen produktionsnahen Test:
 
 ```bash
-npm start
+npm run build
+npm run start --workspace server
 ```
 
 ---
@@ -120,7 +122,7 @@ npm start
 Datei `Procfile` ist bereits enthalten:
 
 ```txt
-web: npm start
+web: npm run start --workspace server
 ```
 
 Schritte:
